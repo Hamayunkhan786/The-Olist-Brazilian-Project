@@ -1,0 +1,31 @@
+{
+  "sql.linting.enabled": false,
+  "mssql.linting.enabled": false,
+  "mssql.intellisense.enableIntelliSense": false,
+  "mssql.validate": false,
+  "mssql.format.alignClauseToFirstKeyword": false,
+  "mssql.connections": [],
+  "[sql]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": []
+  },
+  "[jinja-sql]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": false
+  },
+  "files.associations": {
+    "*.sql": "jinja-sql"
+  },
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/node_modules": true,
+    "**/.pytest_cache": true
+  },
+  "search.exclude": {
+    "dbt_ecommerce/target": true,
+    "dbt_ecommerce/logs": true,
+    ".venv*": true,
+    "**/node_modules": true
+  }
+}
