@@ -1,0 +1,75 @@
+version: 2
+
+sources:
+  - name: olist_raw
+    database: ECOMMERCE_DW
+    schema: RAW
+    tables:
+      - name: orders
+        identifier: ORDERS
+      - name: customers
+        identifier: CUSTOMERS
+      - name: order_items
+        identifier: ORDER_ITEMS
+      - name: products
+        identifier: MONGO_PRODUCTS
+
+models:
+  - name: stg_orders
+    description: "Staging table for cleaned orders data"
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+
+  - name: stg_customers
+    description: "Staging table for customer profile data"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_order_items
+    description: "Staging table for line item data"
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+      - name: order_item_id
+        tests:
+          - not_null
+
+  - name: stg_products
+    description: "Staging table for raw products data"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_orders
+    description: "Fact table combining orders and aggregated item totals"
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: total_items
+        tests:
+          - not_null
+
+  - name: dim_products
+    description: "Dimension table for product attributes and categories"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null

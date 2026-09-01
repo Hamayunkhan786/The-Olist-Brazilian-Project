@@ -1,0 +1,8 @@
+FROM apache/airflow:3.1.0
+
+USER airflow
+RUN pip install --no-cache-dir \
+	dbt-postgres==1.11.0 \
+	pandas==3.0.5 \
+	pyarrow==25.0.1 \
+	pymongo==4.17.0

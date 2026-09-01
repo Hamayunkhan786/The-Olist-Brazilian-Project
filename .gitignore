@@ -1,0 +1,53 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python virtual environments
+.venv/
+.venv-1/
+.venv-2/
+.airflow-venv/
+.airflow-wsl-venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local dbt / credentials
+**/profiles.yml
+**/dbt_profiles.yml
+**/dbt_profiles.example.yml
+
+dbt_packages/
+target/
+logs/
+*.log
+
+# Project runtime artifacts
+postgres/
+postgre/
+airflow/
+*.parquet
+*.csv
+
+# Snowflake / Docker local data
+.data/
+
+# Python tooling
+.coverage
+.pytest_cache/
+
+# Airflow generated files
+airflow_api.log
+airflow_dag_processor.log
+airflow_scheduler.log
+airflow_triggerer.log
