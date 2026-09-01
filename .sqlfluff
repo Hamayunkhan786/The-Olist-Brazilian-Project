@@ -1,0 +1,11 @@
+[core]
+dialect = snowflake
+exclude_rules = LT01,LT02,LT03,LT04,LT05,LT06,LT07,LT08,LT09,LT10
+ignore = parsing
+
+[sqlfluff:indentation]
+indentation_width = 4
+indent_unit = space
+
+[sqlfluff:templater:jinja]
+context = {}
