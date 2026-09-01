@@ -1,0 +1,9 @@
+status_code,status_name,status_description,is_final_status
+created,Created,Order has been created,false
+approved,Approved,Order has been approved,false
+invoiced,Invoiced,Order has been invoiced,false
+processing,Processing,Order is being processed,false
+shipped,Shipped,Order has been shipped,false
+delivered,Delivered,Order has been successfully delivered,true
+cancelled,Cancelled,Order has been cancelled,true
+unavailable,Unavailable,Order is unavailable,true

@@ -39,6 +39,7 @@ airflow/
 *.parquet
 *.csv
 !sample_data/*.csv
+!dbt_ecommerce/seeds/*.csv
 
 # Snowflake / Docker local data
 .data/
