@@ -4,72 +4,164 @@ sources:
   - name: olist_raw
     database: ECOMMERCE_DW
     schema: RAW
+    description: "Raw data layer from PostgreSQL and MongoDB sources"
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    
     tables:
       - name: orders
         identifier: ORDERS
+        description: "Raw orders from PostgreSQL source.orders"
+        loaded_at_field: order_purchase_timestamp
+        columns:
+          - name: order_id
+            description: "Unique order identifier"
+          - name: order_status
+            description: "Current order status"
+          
       - name: customers
         identifier: CUSTOMERS
+        description: "Raw customers from PostgreSQL source.customers"
+        columns:
+          - name: customer_id
+            description: "Unique customer identifier"
+          
       - name: order_items
         identifier: ORDER_ITEMS
+        description: "Line items from PostgreSQL source.order_items"
+        columns:
+          - name: order_id
+            description: "Reference to order"
+          - name: order_item_id
+            description: "Line item sequence number"
+          
       - name: products
         identifier: MONGO_PRODUCTS
+        description: "Products from MongoDB source"
+        columns:
+          - name: product_id
+            description: "Unique product identifier"
 
 models:
   - name: stg_orders
-    description: "Staging table for cleaned orders data"
+    description: "Staging table for cleaned orders data with business logic"
     columns:
       - name: order_id
+        description: "Unique order identifier"
         tests:
           - unique
           - not_null
       - name: customer_id
+        description: "Foreign key to customer"
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: order_status
+        description: "Order status (created, approved, shipped, delivered, cancelled)"
+        tests:
+          - accepted_values:
+              values: ['created', 'approved', 'shipped', 'delivered', 'cancelled', 'invoiced', 'processing']
 
   - name: stg_customers
     description: "Staging table for customer profile data"
     columns:
       - name: customer_id
+        description: "Unique customer identifier"
         tests:
           - unique
           - not_null
+      - name: customer_state
+        description: "State code (UF)"
+        tests:
+          - accepted_values:
+              values: ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
 
   - name: stg_order_items
-    description: "Staging table for line item data"
+    description: "Staging table for line item data with order references"
     columns:
       - name: order_id
+        description: "Foreign key to order"
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
       - name: order_item_id
+        description: "Line item sequence number"
         tests:
           - not_null
+      - name: product_id
+        description: "Foreign key to product"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
 
   - name: stg_products
     description: "Staging table for raw products data"
     columns:
       - name: product_id
+        description: "Unique product identifier"
         tests:
           - unique
           - not_null
+      - name: product_category_name
+        description: "Product category"
+        tests:
+          - not_null
 
   - name: fct_orders
-    description: "Fact table combining orders and aggregated item totals"
+    description: "Fact table combining orders and aggregated item totals for analytics"
     columns:
       - name: order_id
+        description: "Unique order identifier"
         tests:
           - unique
           - not_null
       - name: customer_id
+        description: "Foreign key to customer dimension"
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
       - name: total_items
+        description: "Count of items in order"
         tests:
           - not_null
+      - name: order_status
+        description: "Order status"
+        tests:
+          - accepted_values:
+              values: ['created', 'approved', 'shipped', 'delivered', 'cancelled', 'invoiced', 'processing']
+
+  - name: dim_customers
+    description: "Customer dimension table with profile attributes"
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier"
+        tests:
+          - unique
+          - not_null
+      - name: customer_state
+        description: "State code (UF)"
+        tests:
+          - accepted_values:
+              values: ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
 
   - name: dim_products
     description: "Dimension table for product attributes and categories"
     columns:
       - name: product_id
+        description: "Unique product identifier"
         tests:
           - unique
+          - not_null
+      - name: product_category_name
+        description: "Product category classification"
+        tests:
           - not_null

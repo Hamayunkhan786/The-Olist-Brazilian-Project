@@ -5,6 +5,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # Run daily at 2 AM UTC
 
 jobs:
   validate:
@@ -54,10 +56,37 @@ jobs:
         working-directory: ./dbt_ecommerce
         run: dbt parse
 
+      - name: dbt source freshness
+        working-directory: ./dbt_ecommerce
+        run: dbt source freshness
+        continue-on-error: true
+
+      - name: dbt run staging
+        working-directory: ./dbt_ecommerce
+        run: dbt run --select staging
+
       - name: dbt run marts
         working-directory: ./dbt_ecommerce
         run: dbt run --select marts
 
+      - name: dbt snapshot
+        working-directory: ./dbt_ecommerce
+        run: dbt snapshot
+        continue-on-error: true
+
       - name: dbt test
         working-directory: ./dbt_ecommerce
         run: dbt test
+
+      - name: dbt docs generate
+        working-directory: ./dbt_ecommerce
+        run: dbt docs generate
+        continue-on-error: true
+
+      - name: Upload dbt artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-target
+          path: dbt_ecommerce/target/
+          retention-days: 7
