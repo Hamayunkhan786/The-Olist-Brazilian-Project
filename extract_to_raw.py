@@ -16,7 +16,6 @@ def to_safe_string(value):
         return value.decode("utf-8", errors="replace")
     return str(value)
 
-# 2. Extract from PostgreSQL (Operational Relational Data)
 try:
     pg_conn = psycopg2.connect(
         dbname=os.getenv("PGDATABASE", "ecommerce_source"),
@@ -40,7 +39,6 @@ try:
 except Exception as e:
     print(f"PostgreSQL Extraction Error: {e}")
 
-# 3. Extract from MongoDB (Product Catalog, Reviews, Events)
 try:
     mongo_client = MongoClient(
         os.getenv("MONGODB_URI", "mongodb://localhost:27017/")

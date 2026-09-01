@@ -1,7 +1,3 @@
--- Exploratory Analysis: Product Performance
--- Purpose: Analyze product sales volume and revenue
--- Note: Analyses are not part of the dbt DAG, use for ad-hoc queries
-
 SELECT 
     p.product_id,
     p.product_category_name,

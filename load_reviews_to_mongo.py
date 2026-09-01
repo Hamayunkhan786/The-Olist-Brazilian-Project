@@ -3,15 +3,12 @@ import pandas as pd
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 
-# 1. MongoDB Connection
 client = MongoClient("mongodb://localhost:27017/")
 db = client["ecommerce"]
 collection = db["reviews"]
 
-# Purana data clear karne ke liye
 collection.delete_many({})
 
-# 2. Parquet file ka path
 reviews_file = r"D:\olist-data-platform\data\raw\mongo_order_reviews.parquet"
 
 if os.path.exists(reviews_file):

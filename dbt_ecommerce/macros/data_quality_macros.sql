@@ -1,17 +1,9 @@
-{# Macro: Log Processing Info #}
-{# Purpose: Add debug logging to dbt models #}
-{# Usage: {{ log_info("Processing orders table") }} #}
-
 {% macro log_info(message) %}
     {% if execute %}
         {% do log(message, info=true) %}
     {% endif %}
 {% endmacro %}
 
-
-{# Macro: Row Count Assertion #}
-{# Purpose: Assert that a model has expected row count #}
-{# Usage: {{ assert_row_count(model_name, expected_count) }} #}
 
 {% macro assert_row_count(model_name, expected_count) %}
     select case
@@ -22,10 +14,6 @@
     from (select count(*) as row_count from {{ model_name }})
 {% endmacro %}
 
-
-{# Macro: Data Quality Check #}
-{# Purpose: Check for NULL values in critical columns #}
-{# Usage: {{ check_nulls('table_name', ['column1', 'column2']) }} #}
 
 {% macro check_nulls(table_name, critical_columns) %}
     {% set cols = critical_columns|join(', ') %}

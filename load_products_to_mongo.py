@@ -2,14 +2,12 @@ import os
 import pandas as pd
 from pymongo import MongoClient
 
-# 1. MongoDB Connection
 client = MongoClient("mongodb://localhost:27017/")
 db = client["ecommerce"]
 collection = db["products"]
 
 collection.delete_many({})
 
-# 2. CSV file ka path
 data_folder = r"D:\olist-data-platform\data"
 products_file = os.path.join(data_folder, "olist_products_dataset.csv")
 
@@ -19,7 +17,6 @@ if os.path.exists(products_file):
     
     documents = []
     for _, row in df_products.iterrows():
-        # Safe column fetch karne ke liye helper function
         def get_val(col_name, default=None):
             return row[col_name] if col_name in row and pd.notna(row[col_name]) else default
 
@@ -30,7 +27,6 @@ if os.path.exists(products_file):
                 "original": str(get_val('product_category_name')) if get_val('product_category_name') else None
             },
             "content": {
-                # Spelling variations ko handle karne ke liye check
                 "name_length": int(get_val('product_name_length', get_val('product_name_lenght', 0))),
                 "description_length": int(get_val('product_description_length', get_val('product_description_lenght', 0))),
                 "photos_count": int(get_val('product_photos_qty', 0))
@@ -52,4 +48,4 @@ if os.path.exists(products_file):
         collection.insert_many(documents)
         print(f"Successfully inserted {len(documents)} nested product documents into MongoDB (`ecommerce.products`)!")
 else:
-    print(f"Error: Products file nahi mili -> {products_file}")
+    print(f"Error: Products file not found -> {products_file}")

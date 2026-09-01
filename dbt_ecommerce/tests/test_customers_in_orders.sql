@@ -1,6 +1,3 @@
--- Custom Test: Ensure all customers have valid orders
--- Purpose: Check that dimension customers are used in fact tables
-
 {% test customers_in_orders(model, column_name) %}
     
     select *

@@ -1,7 +1,3 @@
--- Exploratory Analysis: Top Customers by Order Value
--- Purpose: Identify high-value customers for business intelligence
--- Note: Analyses are not part of the dbt DAG, use for ad-hoc queries
-
 SELECT 
     c.customer_id,
     c.customer_unique_id,

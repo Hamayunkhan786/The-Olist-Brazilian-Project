@@ -4,7 +4,6 @@ from pymongo import MongoClient
 from sqlalchemy import create_engine
 import pandas as pd
 
-# 1. Connect & Fetch valid IDs from PostgreSQL and MongoDB
 pg_engine = create_engine("postgresql://postgres:REDACTED@localhost:5432/ecommerce_source")
 customer_ids = pd.read_sql("SELECT customer_id FROM source.customers LIMIT 5000;", pg_engine)["customer_id"].tolist()
 

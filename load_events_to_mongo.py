@@ -2,15 +2,12 @@ import os
 import pandas as pd
 from pymongo import MongoClient
 
-# 1. MongoDB Connection
 client = MongoClient("mongodb://localhost:27017/")
 db = client["ecommerce"]
 collection = db["customer_events"]
 
-# Purana data clear karne ke liye
 collection.delete_many({})
 
-# 2. Parquet file ka path (data/raw folder se)
 events_file = r"D:\olist-data-platform\data\raw\mongo_customer_events.parquet"
 
 if os.path.exists(events_file):
@@ -40,9 +37,7 @@ if os.path.exists(events_file):
         }
         documents.append(doc)
     
-    # 3. Bulk insert into MongoDB
     if documents:
-        # Batch inserting to handle large number of event records smoothly
         batch_size = 5000
         for i in range(0, len(documents), batch_size):
             batch = documents[i:i + batch_size]
