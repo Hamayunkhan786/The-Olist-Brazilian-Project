@@ -1,26 +1,25 @@
 # Olist E-commerce Data Platform
 
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9+-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![dbt Core](https://img.shields.io/badge/dbt-1.12+-orange?logo=dbt&logoColor=white)](https://www.getdbt.com/)
+[![Snowflake](https://img.shields.io/badge/Snowflake-Cloud%20DW-29B5E8?logo=snowflake&logoColor=white)](https://www.snowflake.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
 A full-stack data engineering project that ingests transactional data from PostgreSQL and MongoDB into Snowflake, and then transforms it using dbt Core into analytics-ready staging and mart models.
 
 ## Architecture Overview
 
-```text
-PostgreSQL / MongoDB
-        |
-        v
-Python ingestion scripts + Airflow DAGs
-        |
-        v
-Snowflake RAW layer
-        |
-        v
-dbt Core transformations
-        |
-        v
-Staging + Marts layer
-        |
-        v
-Business reporting dashboards / analytics
+```mermaid
+graph TD
+    A["PostgreSQL (source.orders, source.customers)"] --> D["Python Ingestion"] 
+    B["MongoDB (products, reviews)"] --> D
+    D -->|load_orders_to_snowflake.py| C["Snowflake RAW Layer<br/>(RAW.ORDERS, RAW.CUSTOMERS)"]
+    C -->|dbt Core 1.12.3| E["Staging Layer<br/>(stg_orders, stg_customers, stg_products)"]
+    E -->|dbt transformations| F["Marts Layer<br/>(dim_customers, dim_products, fct_orders)"]
+    F --> G["Analytics & BI Dashboards"]
+    H["Apache Airflow<br/>(orchestration)"] -.->|schedules| D
+    H -.->|schedules| E
 ```
 
 ## Tech Stack
