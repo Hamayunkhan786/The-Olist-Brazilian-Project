@@ -102,6 +102,14 @@ copy dbt_profiles.example.yml dbt_profiles.yml
 
 Update the file with your Snowflake account information and keep it local-only.
 
+## Public Demo Data
+
+This repository intentionally keeps only a tiny, anonymized sample dataset in the `sample_data/` folder for public sharing.
+
+- Real production-like CSVs and all local warehouse data remain on the developer machine and are ignored by Git.
+- Sensitive values, credentials, and generated warehouse artifacts are never committed.
+- The sample CSVs are designed to demonstrate the data model without exposing real customer or order records.
+
 ## Data Ingestion
 
 To move PostgreSQL source data into Snowflake RAW layer:

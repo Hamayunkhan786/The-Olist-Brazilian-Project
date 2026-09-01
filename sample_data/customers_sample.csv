@@ -1,0 +1,6 @@
+customer_id,customer_unique_id,customer_zip_code_prefix,customer_city,customer_state
+1000000001,customer-001,01000,sao paulo,SP
+1000000002,customer-002,02000,rio de janeiro,RJ
+1000000003,customer-003,03000,curitiba,PR
+1000000004,customer-004,04000,belo horizonte,MG
+1000000005,customer-005,05000,porto alegre,RS

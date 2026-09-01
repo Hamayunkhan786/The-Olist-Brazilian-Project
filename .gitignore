@@ -38,6 +38,7 @@ postgre/
 airflow/
 *.parquet
 *.csv
+!sample_data/*.csv
 
 # Snowflake / Docker local data
 .data/
