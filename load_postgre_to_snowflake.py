@@ -6,21 +6,21 @@ import psycopg2
 
 # 1. PostgreSQL Connection Configuration
 pg_conn_params = {
-    "dbname": "ecommerce_source",
-    "user": "postgres",
-    "password": "REDACTED",
-    "host": "localhost",
-    "port": "5432"
+    "dbname": os.getenv("PGDATABASE", "ecommerce_source"),
+    "user": os.getenv("PGUSER", "postgres"),
+    "password": os.getenv("PGPASSWORD", "change_me"),
+    "host": os.getenv("PGHOST", "localhost"),
+    "port": os.getenv("PGPORT", "5432")
 }
 
 # 2. Snowflake Connection Configuration
 snowflake_conn = snowflake.connector.connect(
-    user='HAMAYUNKHAN',
-    password='03287568610aA@',
-    account='dqvneja-gp96469',
-    warehouse='COMPUTE_WH',
-    database='ECOMMERCE_DW',
-    schema='RAW'
+    user=os.getenv("SNOWFLAKE_USER", "your_user"),
+    password=os.getenv("SNOWFLAKE_PASSWORD", "change_me"),
+    account=os.getenv("SNOWFLAKE_ACCOUNT", "your_account"),
+    warehouse=os.getenv("SNOWFLAKE_WAREHOUSE", "COMPUTE_WH"),
+    database=os.getenv("SNOWFLAKE_DATABASE", "ECOMMERCE_DW"),
+    schema=os.getenv("SNOWFLAKE_SCHEMA", "RAW")
 )
 
 try:

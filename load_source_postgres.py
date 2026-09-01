@@ -3,7 +3,11 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 # 1. PostgreSQL Connection
-engine = create_engine("postgresql://postgres:REDACTED@localhost:5432/ecommerce_source")
+PG_URI = os.getenv(
+    "PG_URI",
+    "postgresql://postgres:change_me@localhost:5432/ecommerce_source",
+)
+engine = create_engine(PG_URI)
 
 # 2. Data folder ka path jahan CSVs mojood hain
 data_folder = r"D:\olist-data-platform\data"

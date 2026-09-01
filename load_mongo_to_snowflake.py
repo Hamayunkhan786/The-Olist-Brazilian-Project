@@ -6,17 +6,17 @@ from pymongo import MongoClient
 import json
 
 # 1. MongoDB Connection Configuration
-mongo_client = MongoClient("mongodb://localhost:27017/")
-mongo_db = mongo_client["ecommerce_mongo_db"]  # Apne MongoDB database ka naam yahan likhein
+mongo_client = MongoClient(os.getenv("MONGODB_URI", "mongodb://localhost:27017/"))
+mongo_db = mongo_client[os.getenv("MONGO_DB", "ecommerce_mongo_db")]
 
 # 2. Snowflake Connection Configuration
 snowflake_conn = snowflake.connector.connect(
-    user='HAMAYUNKHAN',
-    password='03287568610aA@',
-    account='dqvneja-gp96469',
-    warehouse='COMPUTE_WH',
-    database='ECOMMERCE_DW',
-    schema='RAW'
+    user=os.getenv("SNOWFLAKE_USER", "your_user"),
+    password=os.getenv("SNOWFLAKE_PASSWORD", "change_me"),
+    account=os.getenv("SNOWFLAKE_ACCOUNT", "your_account"),
+    warehouse=os.getenv("SNOWFLAKE_WAREHOUSE", "COMPUTE_WH"),
+    database=os.getenv("SNOWFLAKE_DATABASE", "ECOMMERCE_DW"),
+    schema=os.getenv("SNOWFLAKE_SCHEMA", "RAW")
 )
 
 # MongoDB collection mapping -> Snowflake VARIANT table name

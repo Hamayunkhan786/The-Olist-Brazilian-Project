@@ -1,12 +1,13 @@
+import os
 import pandas as pd
 from sqlalchemy import create_engine
 
 # 1. PostgreSQL Connection Settings
-DB_USER = "postgres"
-DB_PASS = "REDACTED"
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "ecommerce_source"
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASS = os.getenv("DB_PASS", "change_me")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "5432")
+DB_NAME = os.getenv("DB_NAME", "ecommerce_source")
 
 # SQLAlchemy connection string
 engine = create_engine(f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}")

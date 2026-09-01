@@ -3,9 +3,9 @@ services:
     image: postgres:15
     container_name: olist_postgres
     environment:
-      POSTGRES_USER: olist_user
-      POSTGRES_PASSWORD: olist_password
-      POSTGRES_DB: ecommerce_source
+      POSTGRES_USER: ${POSTGRES_USER:-olist_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-ecommerce_source}
     ports:
       - "5432:5432"
     volumes:
@@ -26,17 +26,17 @@ services:
     environment:
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       DBT_PROFILES_DIR: /opt/airflow/project
-      PGHOST: host.docker.internal
-      PGUSER: postgres
-      PGPASSWORD: REDACTED
-      PGDATABASE: ecommerce_source
-      MONGODB_URI: mongodb://host.docker.internal:27017/
+      PGHOST: ${PGHOST:-host.docker.internal}
+      PGUSER: ${PGUSER:-postgres}
+      PGPASSWORD: ${PGPASSWORD:-change_me}
+      PGDATABASE: ${PGDATABASE:-ecommerce_source}
+      MONGODB_URI: ${MONGODB_URI:-mongodb://host.docker.internal:27017/}
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./extract_to_raw.py:/opt/airflow/project/extract_to_raw.py
       - ./data:/opt/airflow/project/data
       - ./dbt_ecommerce:/opt/airflow/project/dbt_ecommerce
-      - ./dbt_profiles.yml:/opt/airflow/project/profiles.yml
+      - ./dbt_profiles.example.yml:/opt/airflow/project/profiles.yml
     command: standalone
     restart: always
