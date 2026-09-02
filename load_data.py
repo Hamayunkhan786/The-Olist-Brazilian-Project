@@ -2,11 +2,9 @@ import pandas as pd
 from sqlalchemy import create_engine, text, event
 import os
 
-# Database connection
 PG_URI = os.getenv("PG_URI", "postgresql://postgres:change_me@localhost:5432/ecommerce_source")
 engine = create_engine(PG_URI)
 
-# Drop entire source schema with CASCADE in a separate connection
 conn = engine.raw_connection()
 cursor = conn.cursor()
 cursor.execute("DROP SCHEMA IF EXISTS source CASCADE;")
@@ -14,7 +12,6 @@ cursor.execute("CREATE SCHEMA source;")
 conn.commit()
 conn.close()
 
-# Create source schema if it doesn't exist
 with engine.begin() as conn:
     pass
 
@@ -28,7 +25,6 @@ csv_files = {
     'olist_geolocation_dataset.csv': 'geolocation',
 }
 
-# Add products if it exists
 if os.path.exists(os.path.join(data_dir, 'olist_products_dataset.csv')):
     csv_files['olist_products_dataset.csv'] = 'products'
 

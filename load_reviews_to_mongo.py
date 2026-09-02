@@ -15,7 +15,6 @@ if os.path.exists(reviews_file):
     print("Reading reviews Parquet file...")
     df_reviews = pd.read_parquet(reviews_file)
     
-    # Duplicate review_ids remove karna
     if 'review_id' in df_reviews.columns:
         initial_count = len(df_reviews)
         df_reviews = df_reviews.drop_duplicates(subset=['review_id'])
@@ -46,7 +45,6 @@ if os.path.exists(reviews_file):
         }
         documents.append(doc)
     
-    # 3. Safe bulk insert with ordered=False
     if documents:
         try:
             result = collection.insert_many(documents, ordered=False)

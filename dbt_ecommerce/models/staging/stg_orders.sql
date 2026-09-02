@@ -5,7 +5,7 @@ WITH raw_orders AS (
         order_status,
         order_purchase_timestamp,
         order_delivered_customer_date
-    FROM {{ source('olist_raw', 'orders') }}  -- Yahan bhi 'olist_raw'
+    FROM {{ source('olist_raw', 'orders') }}
 )
 
 SELECT 

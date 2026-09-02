@@ -8,7 +8,6 @@
 WITH orders AS (
     SELECT * FROM {{ ref('stg_orders') }}
     
-    -- Yeh block sirf tab run hoga jab table pehle se mojood ho
     {% if is_incremental() %}
         WHERE purchase_at > (SELECT MAX(purchase_at) FROM {{ this }})
     {% endif %}
@@ -25,8 +24,6 @@ order_item_aggregates AS (
         SUM(price) AS total_order_amount,
         SUM(freight_value) AS total_freight_amount
     FROM order_items
-    -- Hum yahan bhi filter laga sakte hain taake sirf naye order items process hon
-    -- Lekin kyunke hum orders wale CTE mein join lagayenge, toh performance wese hi behtar ho jayegi
     GROUP BY order_id
 )
 

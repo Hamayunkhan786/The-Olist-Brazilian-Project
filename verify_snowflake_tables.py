@@ -1,7 +1,6 @@
 import os
 import snowflake.connector
 
-# Get Snowflake credentials from environment
 account = os.getenv('SNOWFLAKE_ACCOUNT')
 user = os.getenv('SNOWFLAKE_USER')
 password = os.getenv('SNOWFLAKE_PASSWORD')
@@ -22,7 +21,6 @@ try:
     
     cursor = conn.cursor()
     
-    # Check RAW layer tables
     print("\n=== RAW LAYER ===")
     raw_tables = ['ORDERS', 'CUSTOMERS', 'ORDER_ITEMS', 'MONGO_PRODUCTS']
     for table in raw_tables:
@@ -33,7 +31,6 @@ try:
         except Exception as e:
             print(f"RAW.{table}: ERROR - {e}")
     
-    # Check STAGING layer tables
     print("\n=== STAGING LAYER (Staging Models) ===")
     staging_tables = ['stg_orders', 'stg_customers', 'stg_order_items', 'stg_products']
     for table in staging_tables:
@@ -44,7 +41,6 @@ try:
         except Exception as e:
             print(f"STAGING.{table}: ERROR - {e}")
     
-    # Check MARTS (Dimension and Fact tables)
     print("\n=== MARTS LAYER (Dimensions & Facts) ===")
     marts_tables = ['dim_customers', 'dim_products', 'fct_orders']
     for table in marts_tables:

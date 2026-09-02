@@ -7,7 +7,7 @@ WITH raw_order_items AS (
         shipping_limit_date,
         price,
         freight_value
-    FROM {{ source('olist_raw', 'order_items') }}  -- Yahan bhi 'olist_raw'
+    FROM {{ source('olist_raw', 'order_items') }}
 )
 
 SELECT 

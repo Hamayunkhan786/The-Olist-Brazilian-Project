@@ -1,11 +1,9 @@
-# OS / Editor
 .DS_Store
 Thumbs.db
 .vscode/
 !.vscode/settings.json
 .idea/
 
-# Python virtual environments
 .venv/
 .venv-1/
 .venv-2/
@@ -16,7 +14,6 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Environment / secrets
 .env
 .env.*
 !.env.example
@@ -24,7 +21,6 @@ __pycache__/
 *.pem
 *.key
 
-# Local dbt / credentials
 **/profiles.yml
 **/dbt_profiles.yml
 **/dbt_profiles.example.yml
@@ -35,7 +31,6 @@ target/
 logs/
 *.log
 
-# Project runtime artifacts
 postgres/
 postgre/
 airflow/
@@ -44,14 +39,11 @@ airflow/
 !sample_data/*.csv
 !dbt_ecommerce/seeds/*.csv
 
-# Snowflake / Docker local data
 .data/
 
-# Python tooling
 .coverage
 .pytest_cache/
 
-# Airflow generated files
 airflow_api.log
 airflow_dag_processor.log
 airflow_scheduler.log

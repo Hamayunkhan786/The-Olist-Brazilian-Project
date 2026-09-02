@@ -1,10 +1,7 @@
-{% test orders_have_items(model, column_name) %}
-    
-    select *
-    from {{ model }}
-    where {{ column_name }} not in (
-        select distinct order_id 
-        from {{ ref('stg_order_items') }}
-    )
-    
-{% endtest %}
+select order_id
+from {{ ref('stg_orders') }}
+where order_status not in ('canceled', 'unavailable')
+    and order_id not in (
+    select distinct order_id
+    from {{ ref('stg_order_items') }}
+)

@@ -5,11 +5,9 @@ import pandas as pd
 from pymongo import MongoClient
 import json
 
-# 1. MongoDB Connection Configuration
 mongo_client = MongoClient(os.getenv("MONGODB_URI", "mongodb://localhost:27017/"))
 mongo_db = mongo_client[os.getenv("MONGO_DB", "ecommerce_mongo_db")]
 
-# 2. Snowflake Connection Configuration
 snowflake_conn = snowflake.connector.connect(
     user=os.getenv("SNOWFLAKE_USER", "your_user"),
     password=os.getenv("SNOWFLAKE_PASSWORD", "change_me"),
@@ -19,7 +17,6 @@ snowflake_conn = snowflake.connector.connect(
     schema=os.getenv("SNOWFLAKE_SCHEMA", "RAW")
 )
 
-# MongoDB collection mapping -> Snowflake VARIANT table name
 mongo_collections_to_sync = {
     "products": "MONGO_PRODUCTS",
     "reviews": "MONGO_REVIEWS",
@@ -39,13 +36,10 @@ try:
             print(f"No documents found in {mongo_col}. Skipping...")
             continue
 
-        # MongoDB ke '_id' object ko string mein convert karna taake pandas handle kar sake
         for doc in documents:
             if '_id' in doc:
                 doc['_id'] = str(doc['_id'])
 
-        # Snowflake ke VARIANT column ke liye data ko JSON string ya dict ke taur par DataFrame mein dalna
-        # write_pandas dictionary/JSON ko VARIANT mein map kar deta hai jab data proper format mein ho
         df = pd.DataFrame({
             'raw_data': [json.dumps(doc) for doc in documents]
         })

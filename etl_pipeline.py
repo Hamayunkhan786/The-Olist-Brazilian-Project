@@ -22,7 +22,6 @@ reviews_data = list(mongo_db["order_reviews"].find(
 ))
 reviews_df = pd.DataFrame(reviews_data)
 
-# Convert review_score to numeric and aggregate multiple reviews per order
 reviews_df["review_score"] = pd.to_numeric(reviews_df["review_score"], errors="coerce")
 reviews_summary = reviews_df.groupby("order_id").agg(
     avg_review_score=("review_score", "mean"),
@@ -41,7 +40,6 @@ print("Writing Enriched Analytics Dataset back to PostgreSQL...")
 with engine.begin() as conn:
     conn.execute(text("CREATE SCHEMA IF NOT EXISTS analytics;"))
 
-# Load into PostgreSQL destination table
 enriched_df.to_sql(
     name="enriched_orders",
     con=engine,

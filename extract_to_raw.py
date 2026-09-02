@@ -4,7 +4,6 @@ import psycopg2
 from bson.codec_options import CodecOptions
 from pymongo import MongoClient
 
-# 1. Output directory for raw files
 OUTPUT_DIR = "data/raw"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -53,7 +52,6 @@ try:
         if data:
             df_mongo = pd.DataFrame(data)
             
-            # Convert byte values before pandas attempts to decode them.
             for col in df_mongo.columns:
                 df_mongo[col] = df_mongo[col].map(to_safe_string)
             

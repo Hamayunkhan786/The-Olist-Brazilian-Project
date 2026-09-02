@@ -1,7 +1,3 @@
-{% test no_negative_prices(model, column_name) %}
-    
-    select *
-    from {{ model }}
-    where {{ column_name }} < 0
-    
-{% endtest %}
+select *
+from {{ ref('stg_order_items') }}
+where price < 0

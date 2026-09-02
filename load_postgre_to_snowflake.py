@@ -4,7 +4,6 @@ from snowflake.connector.pandas_tools import write_pandas
 import pandas as pd
 import psycopg2
 
-# 1. PostgreSQL Connection Configuration
 pg_conn_params = {
     "dbname": os.getenv("PGDATABASE", "ecommerce_source"),
     "user": os.getenv("PGUSER", "postgres"),
@@ -13,7 +12,6 @@ pg_conn_params = {
     "port": os.getenv("PGPORT", "5432")
 }
 
-# 2. Snowflake Connection Configuration
 snowflake_conn = snowflake.connector.connect(
     user=os.getenv("SNOWFLAKE_USER", "your_user"),
     password=os.getenv("SNOWFLAKE_PASSWORD", "change_me"),
@@ -34,11 +32,9 @@ try:
     pg_conn.close()
     print(f"Fetched {len(df_customers)} rows from PostgreSQL.")
 
-    # IMPORTANT: Snowflake ke liye column names ko uppercase karna zaroori hai
     df_customers.columns = [col.upper() for col in df_customers.columns]
 
     print("Loading data into Snowflake table POSTGRES_CUSTOMERS...")
-    # 3. DataFrame ko Snowflake table mein load karna
     success, nchunks, nrows, _ = write_pandas(
         conn=snowflake_conn,
         df=df_customers,

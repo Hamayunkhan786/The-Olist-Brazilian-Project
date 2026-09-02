@@ -1,7 +1,6 @@
 import pandas as pd
 from pymongo import MongoClient
 
-# Connect to MongoDB
 mongo_client = MongoClient("mongodb://localhost:27017/")
 mongo_db = mongo_client["ecommerce_events"]
 

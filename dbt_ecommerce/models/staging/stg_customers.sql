@@ -5,7 +5,7 @@ WITH raw_customers AS (
         customer_zip_code_prefix,
         customer_city,
         customer_state
-    FROM {{ source('olist_raw', 'customers') }}  -- Yahan 'source' ki jagah 'olist_raw' karna hai
+    FROM {{ source('olist_raw', 'customers') }}
 )
 
 SELECT 
