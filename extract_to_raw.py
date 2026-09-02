@@ -20,7 +20,7 @@ try:
     pg_conn = psycopg2.connect(
         dbname=os.getenv("PGDATABASE", "ecommerce_source"),
         user=os.getenv("PGUSER", "postgres"),
-        password=os.getenv("PGPASSWORD", "REDACTED"),
+        password=os.getenv("PGPASSWORD", "change_me"),
         host=os.getenv("PGHOST", "localhost"),
         port=os.getenv("PGPORT", "5432")
     )

@@ -1,8 +1,9 @@
 import pandas as pd
+import os
 from sqlalchemy import create_engine, text
 
 # Database connection
-PG_URI = "postgresql://postgres:REDACTED@localhost:5432/ecommerce_source"
+PG_URI = os.getenv("PG_URI", "postgresql://postgres:change_me@localhost:5432/ecommerce_source")
 engine = create_engine(PG_URI)
 
 # Get unique product_ids from order_items

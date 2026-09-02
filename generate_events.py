@@ -1,10 +1,11 @@
 import random
+import os
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from sqlalchemy import create_engine
 import pandas as pd
 
-pg_engine = create_engine("postgresql://postgres:REDACTED@localhost:5432/ecommerce_source")
+pg_engine = create_engine(os.getenv("PG_URI", "postgresql://postgres:change_me@localhost:5432/ecommerce_source"))
 customer_ids = pd.read_sql("SELECT customer_id FROM source.customers LIMIT 5000;", pg_engine)["customer_id"].tolist()
 
 mongo_client = MongoClient("mongodb://localhost:27017/")

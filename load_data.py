@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text, event
 import os
 
 # Database connection
-PG_URI = "postgresql://postgres:REDACTED@localhost:5432/ecommerce_source"
+PG_URI = os.getenv("PG_URI", "postgresql://postgres:change_me@localhost:5432/ecommerce_source")
 engine = create_engine(PG_URI)
 
 # Drop entire source schema with CASCADE in a separate connection
