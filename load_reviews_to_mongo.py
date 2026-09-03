@@ -15,18 +15,13 @@ if os.path.exists(reviews_file):
     print("Reading reviews Parquet file...")
     df_reviews = pd.read_parquet(reviews_file)
     
-    if 'review_id' in df_reviews.columns:
-        initial_count = len(df_reviews)
-        df_reviews = df_reviews.drop_duplicates(subset=['review_id'])
-        print(f"Removed {initial_count - len(df_reviews)} duplicate rows from source.")
-    
     documents = []
     for _, row in df_reviews.iterrows():
         def get_val(col_name, default=None):
             return row[col_name] if col_name in row and pd.notna(row[col_name]) else default
 
         doc = {
-            "_id": str(get_val('review_id')),
+            "_id": f"{get_val('review_id')}-{get_val('order_id')}",
             "review_id": str(get_val('review_id')),
             "order_id": str(get_val('order_id')),
             "score": int(get_val('review_score', 0)),

@@ -1,4 +1,7 @@
+{{ config(materialized='table') }}
+
 select
+    customer_unique_id as customer_key,
     customer_unique_id,
     min(customer_id) as customer_id,
     max(city) as customer_city,

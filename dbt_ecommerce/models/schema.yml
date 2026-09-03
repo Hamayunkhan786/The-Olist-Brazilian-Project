@@ -36,6 +36,21 @@ sources:
             description: "Reference to order"
           - name: order_item_id
             description: "Line item sequence number"
+
+      - name: order_payments
+        identifier: POSTGRES_PAYMENTS
+        description: "Payment records from PostgreSQL source.order_payments"
+        columns:
+          - name: order_id
+            description: "Reference to order"
+          - name: payment_sequential
+            description: "Payment sequence number for the order"
+          - name: payment_type
+            description: "Payment method"
+          - name: payment_installments
+            description: "Number of installments"
+          - name: payment_value
+            description: "Payment amount"
           
       - name: products
         identifier: MONGO_PRODUCTS
@@ -43,6 +58,19 @@ sources:
         columns:
           - name: product_id
             description: "Unique product identifier"
+
+      - name: reviews
+        identifier: MONGO_REVIEWS
+        description: "Order reviews from MongoDB source"
+        columns:
+          - name: review_id
+            description: "Review identifier from the source"
+          - name: order_id
+            description: "Order associated with the review"
+
+      - name: customer_events
+        identifier: MONGO_CUSTOMER_EVENTS
+        description: "Synthetic customer events from MongoDB source"
 
 models:
   - name: stg_orders
@@ -115,6 +143,121 @@ models:
         tests:
           - not_null
 
+  - name: stg_customer_events
+    description: "Staging model for synthetic customer events"
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: product_id
+        tests:
+          - not_null
+      - name: event_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['product_view', 'product_search', 'add_to_cart', 'remove_from_cart', 'checkout_started', 'purchase']
+      - name: event_timestamp
+        tests:
+          - not_null
+      - name: session_id
+        tests:
+          - not_null
+
+  - name: fct_customer_events
+    description: "Customer event fact at event grain"
+    columns:
+      - name: event_key
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        tests:
+          - not_null
+      - name: customer_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_unique_id
+      - name: customer_id
+        tests:
+          - not_null
+      - name: product_id
+        tests:
+          - not_null
+      - name: event_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['product_view', 'product_search', 'add_to_cart', 'remove_from_cart', 'checkout_started', 'purchase']
+      - name: event_timestamp
+        tests:
+          - not_null
+      - name: session_id
+        tests:
+          - not_null
+
+  - name: stg_reviews
+    description: "Staging model for order reviews"
+    columns:
+      - name: review_id
+        description: "Review identifier; repeated across different orders in the source"
+        tests:
+          - not_null
+      - name: order_id
+        description: "Order associated with the review"
+        tests:
+          - not_null
+      - name: review_score
+        description: "Review score from one to five"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+
+  - name: fct_reviews
+    description: "Review fact at review and order grain"
+    columns:
+      - name: review_key
+        description: "Composite review and order key"
+        tests:
+          - not_null
+          - unique
+      - name: review_id
+        description: "Review identifier; not unique across orders"
+        tests:
+          - not_null
+      - name: order_id
+        description: "Order associated with the review"
+        tests:
+          - not_null
+      - name: customer_key
+        description: "Customer unique identifier derived through the order"
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_unique_id
+      - name: order_match_status
+        description: "Whether the review order ID resolves to STG_ORDERS"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['MATCHED', 'UNMATCHED']
+      - name: review_score
+        description: "Review score from one to five"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+
   - name: fct_orders
     description: "Fact table combining orders and aggregated item totals for analytics"
     columns:
@@ -134,6 +277,18 @@ models:
         description: "Count of items in order"
         tests:
           - not_null
+      - name: total_order_amount
+        description: "Sum of item prices for the order"
+        tests:
+          - not_null
+      - name: total_freight_amount
+        description: "Sum of item freight values for the order"
+        tests:
+          - not_null
+      - name: total_payment_value
+        description: "Order item amount plus freight amount"
+        tests:
+          - not_null
       - name: order_status
         description: "Order status"
         tests:
@@ -143,11 +298,23 @@ models:
   - name: dim_customers
     description: "Customer dimension table with profile attributes"
     columns:
-      - name: customer_id
-        description: "Unique customer identifier"
+      - name: customer_key
+        description: "Semantic customer key at customer_unique_id grain"
         tests:
           - unique
           - not_null
+      - name: customer_unique_id
+        description: "Natural customer dimension key"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Unique customer identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
       - name: customer_state
         description: "State code (UF)"
         tests:
@@ -165,4 +332,18 @@ models:
       - name: product_category_name
         description: "Product category classification"
         tests:
+          - not_null
+
+  - name: dim_date
+    description: "Calendar dimension for analytical dates"
+    columns:
+      - name: date_key
+        description: "Integer date key in YYYYMMDD format"
+        tests:
+          - unique
+          - not_null
+      - name: full_date
+        description: "Calendar date"
+        tests:
+          - unique
           - not_null

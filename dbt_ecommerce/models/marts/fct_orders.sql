@@ -7,10 +7,6 @@
 
 WITH orders AS (
     SELECT * FROM {{ ref('stg_orders') }}
-    
-    {% if is_incremental() %}
-        WHERE purchase_at > (SELECT MAX(purchase_at) FROM {{ this }})
-    {% endif %}
 ),
 
 order_items AS (
